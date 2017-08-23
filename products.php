@@ -1,11 +1,22 @@
 <?php
+$index = 0;
+$count = 0;
 $path = "products.txt";
 $string = file_get_contents($path);
 $string = preg_replace('/\s+/', '', $string);
 $array = json_decode($string, true);
-echo $array[$product];
+if(isset($_POST['delete'])){
+    $id = $_POST['delete2'];
+    for($i = 0; $i < count($array); $i++){
+        if($count === $i){
+            unset($array[$i]);
+            $file = json_encode($array);
+            file_put_contents($path, $file);
+        }
+        $count++;
+    }
+}
 ?>
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,7 +30,9 @@ echo $array[$product];
 <table>
     <?php
     foreach ($array as $product => $value){
-	        echo "<tr><td>$product</td><td>$value</td><td><button>Delete</button></td></tr>";
+	        echo "<tr><td>$product</td><td>$value</td><td><form method='post'><input type='submit' value='Delete' name='delete'>
+            <input type='hidden' value=$index name='delete2'></form></td></tr>";
+	        $index++;
     }
     ?>
 </table>
